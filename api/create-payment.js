@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Получаем токен
+    // 1. Получаем access token
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -18,8 +18,8 @@ export default async function handler(req, res) {
         },
         body: new URLSearchParams({
           grant_type: "client_credentials",
-          client_id: "l7233dc796764741eea9371f48353e0e0e",
-          client_secret: "ec2379668d9d4a00ba5000e007852634",
+          client_id: "ТВОЙ_CLIENT_ID",
+          client_secret: "ТВОЙ_CLIENT_SECRET",
           scope: "TATRAPAYPLUS"
         })
       }
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    // 2. Создание платежа
+    // 2. Создаём платёж (ТОЧНО как в sandbox)
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -39,12 +39,14 @@ export default async function handler(req, res) {
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": "127.0.0.1",
-          "Redirect-URI": "https://jenyberg.com/dakujeme"
+          "Redirect-URI": "https://jenyberg.com/dakujeme",
+          "Preferred-Method": "CARD_PAY",
+          "Accept-Language": "sk"
         },
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: 500.0,
+              amountValue: 500,
               currency: "EUR"
             },
             endToEnd: "ORDER123"
@@ -54,7 +56,12 @@ export default async function handler(req, res) {
             lastName: "User",
             email: "test@test.com"
           },
-          cardDetail: {}
+          cardDetail: {
+            cardHolder: "Test User",
+            billingAddress: {
+              country: "SK"
+            }
+          }
         })
       }
     );
