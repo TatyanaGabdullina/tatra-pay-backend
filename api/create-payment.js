@@ -28,8 +28,6 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    console.log("TOKEN:", accessToken);
-
     if (!accessToken) {
       return res.status(500).json({
         error: "No access token received",
@@ -47,7 +45,8 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
-          "IP-Address": "127.0.0.1"
+          "IP-Address": "127.0.0.1",
+          "Redirect-URI": "https://jenyberg.com/dakujeme"
         },
         body: JSON.stringify({
           basePayment: {
@@ -56,10 +55,6 @@ export default async function handler(req, res) {
               currency: "EUR"
             },
             endToEndId: "order-123"
-          },
-          redirectUrls: {
-            success: "https://jenyberg.com/dakujeme",
-            cancel: "https://jenyberg.com/dakujeme"
           },
           userData: {
             firstName: "Test",
@@ -71,8 +66,6 @@ export default async function handler(req, res) {
     );
 
     const data = await paymentResponse.json();
-
-    console.log("BANK RESPONSE:", data);
 
     return res.status(200).json({
       status: "success",
