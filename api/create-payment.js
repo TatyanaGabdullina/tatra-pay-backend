@@ -26,8 +26,9 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
-    
+
     const orderId = `order-${Date.now()}`;
+
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -45,25 +46,16 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: 500,
+              amountValue: "500.00",
               currency: "EUR"
             },
-            endToEnd: "orderId"
+            endToEndId: orderId,
+            orderNo: orderId
           },
           userData: {
             firstName: "Test",
             lastName: "User",
             email: "test@test.com"
-          },
-          cardDetail: {
-            cardHolder: "Test User",
-            billingAddress: {
-              streetName: "Test Street",
-              buildingNumber: "1",
-              townName: "Bratislava",
-              postCode: "81101",
-              country: "SK"
-            }
           }
         })
       }
