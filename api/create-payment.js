@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       return res.status(500).json(tokenData);
     }
 
-    // 2. PAYMENT (минимальный валидный)
+    // 2. PAYMENT (с обязательной структурой cardPay)
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -51,7 +51,8 @@ export default async function handler(req, res) {
               amountValue: 10,
               currency: "EUR"
             }
-          }
+          },
+          cardPay: {}   // ← ЭТО КЛЮЧЕВОЕ
         })
       }
     );
