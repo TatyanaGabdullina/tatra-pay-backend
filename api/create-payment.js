@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Получаем access token
+    // 1. TOKEN
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -29,13 +29,10 @@ export default async function handler(req, res) {
     const accessToken = tokenData.access_token;
 
     if (!accessToken) {
-      return res.status(500).json({
-        error: "No access token received",
-        token_response: tokenData
-      });
+      return res.status(500).json(tokenData);
     }
 
-    // 2. Создаём платёж
+    // 2. PAYMENT (минимальный валидный)
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -51,15 +48,9 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: 500,
+              amountValue: 10,
               currency: "EUR"
-            },
-            endToEndId: "order-123"
-          },
-          userData: {
-            firstName: "Test",
-            lastName: "User",
-            email: "test@test.com"
+            }
           }
         })
       }
@@ -67,15 +58,9 @@ export default async function handler(req, res) {
 
     const data = await paymentResponse.json();
 
-    return res.status(200).json({
-      status: "success",
-      payment_url: data.tatraPayPlusUrl || null,
-      full_response: data
-    });
+    return res.status(200).json(data);
 
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
-    });
+    return res.status(500).json({ error: error.message });
   }
 }
