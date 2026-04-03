@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
   if (req.method === "GET") {
-  return res.status(200).json({ test: "ok" });
-}
+    return res.status(200).json({ test: "ok" });
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -27,6 +28,15 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
+    console.log("TOKEN:", accessToken);
+
+    if (!accessToken) {
+      return res.status(500).json({
+        error: "No access token received",
+        token_response: tokenData
+      });
+    }
+
     // 2. Создаём платёж
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
@@ -37,15 +47,19 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
-          "IP-Address": "127.0.0.1",
-          "Redirect-URI": "https://jenyberg.com/dakujeme"
+          "IP-Address": "127.0.0.1"
         },
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: 500,
+              amountValue: "500.00",
               currency: "EUR"
-            }
+            },
+            endToEndId: "order-123"
+          },
+          redirectUrls: {
+            success: "https://jenyberg.com/dakujeme",
+            cancel: "https://jenyberg.com/dakujeme"
           },
           userData: {
             firstName: "Test",
@@ -58,13 +72,17 @@ export default async function handler(req, res) {
 
     const data = await paymentResponse.json();
 
+    console.log("BANK RESPONSE:", data);
+
     return res.status(200).json({
       status: "success",
-      payment_url: data.tatraPayPlusUrl,
+      payment_url: data.tatraPayPlusUrl || null,
       full_response: data
     });
 
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error.message
+    });
   }
 }
