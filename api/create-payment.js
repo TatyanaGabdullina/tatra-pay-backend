@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. TOKEN
+    // 1. Получаем токен
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -18,8 +18,8 @@ export default async function handler(req, res) {
         },
         body: new URLSearchParams({
           grant_type: "client_credentials",
-          client_id: "l7233dc796764741eea9371f48353e0e0e",
-          client_secret: "ec2379668d9d4a00ba5000e007852634",
+          client_id: "ТВОЙ_CLIENT_ID",
+          client_secret: "ТВОЙ_CLIENT_SECRET",
           scope: "TATRAPAYPLUS"
         })
       }
@@ -28,11 +28,7 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    if (!accessToken) {
-      return res.status(500).json(tokenData);
-    }
-
-    // 2. PAYMENT (с обязательной структурой cardPay)
+    // 2. Создание платежа
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -48,18 +44,28 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: 10,
+              amountValue: 500.0,
               currency: "EUR"
-            }
+            },
+            endToEnd: "ORDER123"
           },
-          cardPay: {}   // ← ЭТО КЛЮЧЕВОЕ
+          userData: {
+            firstName: "Test",
+            lastName: "User",
+            email: "test@test.com"
+          },
+          cardDetail: {}
         })
       }
     );
 
     const data = await paymentResponse.json();
 
-    return res.status(200).json(data);
+    return res.status(200).json({
+      status: "success",
+      payment_url: data.tatraPayPlusUrl,
+      full_response: data
+    });
 
   } catch (error) {
     return res.status(500).json({ error: error.message });
