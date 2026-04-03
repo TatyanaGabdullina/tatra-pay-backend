@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
-
+    
     const orderId = `order-${Date.now()}`;
 
     const paymentResponse = await fetch(
@@ -46,11 +46,10 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: "500.00",
+              amountValue: 500,
               currency: "EUR"
             },
-            endToEndId: orderId,
-            orderNo: orderId
+            endToEndId: orderId
           },
           userData: {
             firstName: "Test",
