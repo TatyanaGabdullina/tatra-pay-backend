@@ -1,4 +1,4 @@
-export default async function handler(req, res) { 
+export default async function handler(req, res) {
   if (req.method === "GET") {
     return res.status(200).json({ test: "ok" });
   }
@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Получаем access token
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -27,15 +26,9 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
+    
+    const orderId = `order-${Date.now()}`;
 
-    if (!accessToken) {
-      return res.status(500).json({
-        error: "No access token received",
-        token_response: tokenData
-      });
-    }
-
-    // 2. Создаём платёж
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -45,16 +38,18 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
-          "IP-Address": "127.0.0.1",
-          "Redirect-URI": "https://jenyberg.com/dakujeme"
+          "IP-Address": "192.168.8.78",
+          "Redirect-URI": "https://jenyberg.com/dakujeme",
+          "Preferred-Method": "CARD_PAY",
+          "Accept-Language": "sk"
         },
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: "500.00",
+              amountValue: 500,
               currency: "EUR"
             },
-            endToEndId: "order-123"
+            endToEndId: orderId
           },
           userData: {
             firstName: "Test",
@@ -69,13 +64,11 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       status: "success",
-      payment_url: data.tatraPayPlusUrl || null,
+      payment_url: data.tatraPayPlusUrl,
       full_response: data
     });
 
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
-    });
+    return res.status(500).json({ error: error.message });
   }
 }
