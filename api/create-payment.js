@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+export default async function handler(req, res) { 
   if (req.method === "GET") {
     return res.status(200).json({ test: "ok" });
   }
@@ -26,8 +26,13 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
-    
-    const orderId = `order-${Date.now()}`;
+
+    if (!accessToken) {
+      return res.status(500).json({
+        error: "No access token received",
+        token_response: tokenData
+      });
+    }
 
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
@@ -39,17 +44,15 @@ export default async function handler(req, res) {
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": "192.168.8.78",
-          "Redirect-URI": "https://jenyberg.com/dakujeme",
-          "Preferred-Method": "CARD_PAY",
-          "Accept-Language": "sk"
+          "Redirect-URI": "https://jenyberg.com/dakujeme"
         },
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: 500,
+              amountValue: "500.00",
               currency: "EUR"
             },
-            endToEndId: orderId
+            endToEndId: "order-123"
           },
           userData: {
             firstName: "Test",
@@ -64,11 +67,13 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       status: "success",
-      payment_url: data.tatraPayPlusUrl,
+      payment_url: data.tatraPayPlusUrl || null,
       full_response: data
     });
 
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error.message
+    });
   }
 }
