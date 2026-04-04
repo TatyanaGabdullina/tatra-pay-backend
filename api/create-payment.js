@@ -17,8 +17,8 @@ export default async function handler(req, res) {
         },
         body: new URLSearchParams({
           grant_type: "client_credentials",
-          client_id: "l7233dc796764741eea9371f48353e0e0e",
-          client_secret: "ec2379668d9d4a00ba5000e007852634",
+          client_id: "ТВОЙ_CLIENT_ID",
+          client_secret: "ТВОЙ_CLIENT_SECRET",
           scope: "TATRAPAYPLUS"
         })
       }
@@ -26,6 +26,13 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
+
+    if (!accessToken) {
+      return res.status(500).json({
+        error: "No access token received",
+        token_response: tokenData
+      });
+    }
 
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
@@ -69,4 +76,5 @@ export default async function handler(req, res) {
       error: error.message
     });
   }
+}
 }
