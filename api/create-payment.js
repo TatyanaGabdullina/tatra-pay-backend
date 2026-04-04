@@ -29,6 +29,7 @@ export default async function handler(req, res) {
     const accessToken = tokenData.access_token;
 
     // 2. Создаём платёж
+    const orderId = `order-${Date.now()}`;
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
