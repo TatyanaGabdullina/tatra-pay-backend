@@ -1,4 +1,4 @@
-export default async function handler(req, res) { 
+export default async function handler(req, res) {
   if (req.method === "GET") {
     return res.status(200).json({ test: "ok" });
   }
@@ -34,8 +34,6 @@ export default async function handler(req, res) {
       });
     }
 
-    const orderId = `order-${Date.now()}`;
-
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -47,7 +45,8 @@ export default async function handler(req, res) {
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": "192.168.8.78",
           "Redirect-URI": "https://jenyberg.com/dakujeme",
-          "Preferred-Method": "CARD_PAY"
+          "Preferred-Method": "CARD_PAY",
+          "Accept-Language": "sk"
         },
         body: JSON.stringify({
           basePayment: {
@@ -55,12 +54,31 @@ export default async function handler(req, res) {
               amountValue: 500,
               currency: "EUR"
             },
-            endToEndId: orderId
+            endToEndId: `order-${Date.now()}`
           },
           userData: {
             firstName: "Test",
             lastName: "User",
-            email: "test@test.com"
+            email: "test@test.com",
+            phone: "+421900000000"
+          },
+          cardDetail: {
+            cardHolder: "Test User",
+            isPreAuthorization: false,
+            billingAddress: {
+              streetName: "Test Street",
+              buildingNumber: "1",
+              townName: "Bratislava",
+              postCode: "81101",
+              country: "SK"
+            },
+            shippingAddress: {
+              streetName: "Test Street",
+              buildingNumber: "1",
+              townName: "Bratislava",
+              postCode: "81101",
+              country: "SK"
+            }
           }
         })
       }
