@@ -45,7 +45,7 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
-          "IP-Address": "192.168.8.78",
+          "IP-Address": "127.0.0.1",
           "Redirect-URI": "https://jenyberg.com/dakujeme"
         },
         body: JSON.stringify({
