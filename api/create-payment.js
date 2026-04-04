@@ -34,7 +34,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // 👉 ВОТ ЭТА СТРОКА — единственное новое
     const orderId = `order-${Date.now()}`;
 
     const paymentResponse = await fetch(
@@ -47,7 +46,8 @@ export default async function handler(req, res) {
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": "192.168.8.78",
-          "Redirect-URI": "https://jenyberg.com/dakujeme"
+          "Redirect-URI": "https://jenyberg.com/dakujeme",
+          "Preferred-Method": "CARD_PAY"
         },
         body: JSON.stringify({
           basePayment: {
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
               amountValue: 500,
               currency: "EUR"
             },
-            endToEndId: orderId   // 👈 заменили "order-123"
+            endToEndId: orderId
           },
           userData: {
             firstName: "Test",
