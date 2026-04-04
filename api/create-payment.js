@@ -8,6 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // 1. Получаем access token
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -34,6 +35,7 @@ export default async function handler(req, res) {
       });
     }
 
+    // 2. Создаём платёж
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -76,5 +78,4 @@ export default async function handler(req, res) {
       error: error.message
     });
   }
-}
 }
