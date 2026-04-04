@@ -55,6 +55,7 @@ export default async function handler(req, res) {
             endToEndId: "order-123"
           },
           userData: {
+            externalApplicantId: "user-123",
             firstName: "Test",
             lastName: "User",
             email: "test@test.com"
