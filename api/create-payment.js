@@ -69,6 +69,9 @@ export default async function handler(req, res) {
     );
 
     const data = await paymentResponse.json();
+console.log("STRING_TO_SIGN:", stringToSign);
+console.log("HMAC:", hmac);
+console.log("FINAL_URL:", tatraPayPlusUrl);
 
     return res.status(200).json({
       status: "success",
