@@ -72,11 +72,13 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       status: "success",
-      payment_url: data.tatraPayPlusUrl,
-      full_response: data
+      payment_url: data.tatraPayPlusUrl || null,
+      debug: data
     });
 
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error.message
+    });
   }
 }
