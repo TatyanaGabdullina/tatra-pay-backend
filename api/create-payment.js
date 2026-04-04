@@ -34,6 +34,9 @@ export default async function handler(req, res) {
       });
     }
 
+    // 👉 ВОТ ЭТА СТРОКА — единственное новое
+    const orderId = `order-${Date.now()}`;
+
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -52,10 +55,9 @@ export default async function handler(req, res) {
               amountValue: 500,
               currency: "EUR"
             },
-            endToEndId: "order-123"
+            endToEndId: orderId   // 👈 заменили "order-123"
           },
           userData: {
-            externalApplicantId: "user-123",
             firstName: "Test",
             lastName: "User",
             email: "test@test.com"
