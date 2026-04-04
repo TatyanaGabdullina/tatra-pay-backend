@@ -8,6 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // 1. Получаем access token
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -27,13 +28,7 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    if (!accessToken) {
-      return res.status(500).json({
-        error: "No access token received",
-        token_response: tokenData
-      });
-    }
-
+    // 2. Создаём платёж (ТОЧНО как в sandbox)
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -43,7 +38,7 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
-          "IP-Address": "192.168.8.78",
+          "IP-Address": "127.0.0.1",
           "Redirect-URI": "https://jenyberg.com/dakujeme",
           "Preferred-Method": "CARD_PAY",
           "Accept-Language": "sk"
@@ -54,29 +49,16 @@ export default async function handler(req, res) {
               amountValue: 500,
               currency: "EUR"
             },
-            endToEndId: `order-${Date.now()}`
+            endToEnd: "ORDER123"
           },
           userData: {
             firstName: "Test",
             lastName: "User",
-            email: "test@test.com",
-            phone: "+421900000000"
+            email: "test@test.com"
           },
           cardDetail: {
             cardHolder: "Test User",
-            isPreAuthorization: false,
             billingAddress: {
-              streetName: "Test Street",
-              buildingNumber: "1",
-              townName: "Bratislava",
-              postCode: "81101",
-              country: "SK"
-            },
-            shippingAddress: {
-              streetName: "Test Street",
-              buildingNumber: "1",
-              townName: "Bratislava",
-              postCode: "81101",
               country: "SK"
             }
           }
@@ -88,13 +70,11 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       status: "success",
-      payment_url: data.tatraPayPlusUrl || null,
+      payment_url: data.tatraPayPlusUrl,
       full_response: data
     });
 
   } catch (error) {
-    return res.status(500).json({
-      error: error.message
-    });
+    return res.status(500).json({ error: error.message });
   }
 }
