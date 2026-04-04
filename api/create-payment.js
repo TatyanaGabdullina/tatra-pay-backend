@@ -57,6 +57,12 @@ export default async function handler(req, res) {
             firstName: "Test",
             lastName: "User",
             email: "test@test.com"
+          },
+          cardDetail: {
+            cardHolder: "Test User",
+            billingAddress: {
+              country: "SK"
+            }
           }
         })
       }
