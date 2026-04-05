@@ -38,8 +38,7 @@ export default async function handler(req, res) {
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": req.headers["x-forwarded-for"] || "8.8.8.8",
           "Redirect-URI": "https://jenyberg.com/dakujeme",
-          "Preferred-Method": "CARD_PAY",
-          "Accept-Language": "sk"
+          "Preferred-Method": "CARD_PAY"
         },
         body: JSON.stringify({
           basePayment: {
