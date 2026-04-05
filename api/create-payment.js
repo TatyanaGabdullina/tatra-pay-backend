@@ -56,7 +56,7 @@ export default async function handler(req, res) {
           userData: {
             firstName: "Test",
             lastName: "User",
-            email: "test@test.com"
+            email: "agrumisk@gmail.com"
           },
           cardDetail: {
     cardHolder: "Test User",
