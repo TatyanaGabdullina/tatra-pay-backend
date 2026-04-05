@@ -66,7 +66,10 @@ export default async function handler(req, res) {
       townName: "Bratislava",
       postCode: "81101",
       country: "SK"
-    }
+    }, 
+    cardPayLangOverride: "SK",
+    isPreAuthorization: false
+            
   }
         })
       }
