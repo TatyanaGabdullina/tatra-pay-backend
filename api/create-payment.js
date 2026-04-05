@@ -46,11 +46,6 @@ export default async function handler(req, res) {
             instructedAmount: {
               amountValue: 500,
               currency: "EUR"
-            },
-            endToEnd: {
-              variableSymbol: "123",
-              specificSymbol: "123",
-              constantSymbol: "0308"
             }
           },
           userData: {
