@@ -37,7 +37,7 @@ export default async function handler(req, res) {
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": req.headers["x-forwarded-for"] || "8.8.8.8",
-          "Redirect-URI": "https://developer.tatrabanka.sk";
+          "Redirect-URI": "https://jenyberg.com/dakujeme",
           "Preferred-Method": "CARD_PAY"
         },
         body: JSON.stringify({
@@ -55,9 +55,7 @@ export default async function handler(req, res) {
           userData: {
             firstName: "Test",
             lastName: "User",
-            email: "agrumisk@gmail.com",
-            externalApplicantId: "test123",
-            phone: "+421900000000"
+            email: "agrumisk@gmail.com"
           },
           cardDetail: {
     cardHolder: "Test User",
@@ -78,7 +76,11 @@ export default async function handler(req, res) {
 
     const data = await paymentResponse.json();
 
-    return res.status(200).json(data);
+    return res.status(200).json({
+      status: "success",
+      payment_url: data.tatraPayPlusUrl || null,
+      debug: data
+    });
 
   } catch (error) {
     return res.status(500).json({
