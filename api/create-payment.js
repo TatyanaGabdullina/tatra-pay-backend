@@ -57,8 +57,17 @@ export default async function handler(req, res) {
             firstName: "Test",
             lastName: "User",
             email: "test@test.com"
-          }
-          
+          },
+          cardDetail: {
+    cardHolder: "Test User",
+    billingAddress: {
+      streetName: "Test Street",
+      buildingNumber: "1",
+      townName: "Bratislava",
+      postCode: "81101",
+      country: "SK"
+    }
+  }
         })
       }
     );
