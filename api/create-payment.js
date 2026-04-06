@@ -26,6 +26,7 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
