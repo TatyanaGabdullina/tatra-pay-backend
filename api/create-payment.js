@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
-              amountValue: 500,
+              amountValue: 1,
               currency: "EUR"
             },
             endToEnd: {
