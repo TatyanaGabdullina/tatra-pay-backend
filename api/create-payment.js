@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
   try {
     const tokenResponse = await fetch(
-      "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
+      "https://api.tatrabanka.sk/tatrapayplus/production/auth/oauth/v2/token",
       {
         method: "POST",
         headers: {
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const accessToken = tokenData.access_token;
 
     const paymentResponse = await fetch(
-      "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
+      "https://api.tatrabanka.sk/tatrapayplus/production/v1/payments",
       {
         method: "POST",
         headers: {
