@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Получаем токен (ИСПРАВЛЕНО)
+    // 1. Получаем токен
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -36,34 +36,34 @@ export default async function handler(req, res) {
           "IP-Address": "8.8.8.8",
           "Redirect-URI": "https://jenyberg.com/dakujeme"
         },
-        body: JSON.stringify({
-          basePayment: {
-            instructedAmount: {
-              amountValue: 1,
-              currency: "EUR"
+        body: `{
+          "basePayment": {
+            "instructedAmount": {
+              "amountValue": 1,
+              "currency": "EUR"
             },
-            endToEnd: {
-              variableSymbol: "123",
-              specificSymbol: "123",
-              constantSymbol: "0308"
+            "endToEnd": {
+              "variableSymbol": "123",
+              "specificSymbol": "123",
+              "constantSymbol": "0308"
             }
           },
-          userData: {
-            firstName: "Test",
-            lastName: "User",
-            email: "test@test.com"
+          "userData": {
+            "firstName": "Test",
+            "lastName": "User",
+            "email": "test@test.com"
           },
-          cardDetail: {
-            cardHolder: "Test User",
-            billingAddress: {
-              streetName: "Test Street",
-              buildingNumber: "1",
-              townName: "Bratislava",
-              postCode: "81101",
-              country: "SK"
+          "cardDetail": {
+            "cardHolder": "Test User",
+            "billingAddress": {
+              "streetName": "Test Street",
+              "buildingNumber": "1",
+              "townName": "Bratislava",
+              "postCode": "81101",
+              "country": "SK"
             }
           }
-        })
+        }`
       }
     );
 
