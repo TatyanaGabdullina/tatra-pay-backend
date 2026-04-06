@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: `grant_type=client_credentials&client_id=ТВОЙ_CLIENT_ID&client_secret=ТВОЙ_CLIENT_SECRET&scope=TATRAPAYPLUS`
+        body: `grant_type=client_credentials&client_id=l7233dc796764741eea9371f48353e0e0e&client_secret=ec2379668d9d4a00ba5000e007852634&scope=TATRAPAYPLUS`
       }
     );
 
