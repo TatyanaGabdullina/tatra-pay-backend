@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
+          "Content-Type": "application/json; charset=utf-8",
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": req.headers["x-forwarded-for"] || "8.8.8.8",
