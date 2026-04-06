@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Получаем токен
+    // 1. Получаем токен (ИСПРАВЛЕНО)
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -16,12 +16,7 @@ export default async function handler(req, res) {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: new URLSearchParams({
-          grant_type: "client_credentials",
-          client_id: "ТВОЙ_CLIENT_ID",
-          client_secret: "ТВОЙ_CLIENT_SECRET",
-          scope: "TATRAPAYPLUS"
-        })
+        body: `grant_type=client_credentials&client_id=ТВОЙ_CLIENT_ID&client_secret=ТВОЙ_CLIENT_SECRET&scope=TATRAPAYPLUS`
       }
     );
 
