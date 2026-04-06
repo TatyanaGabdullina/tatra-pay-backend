@@ -31,7 +31,15 @@ export default async function handler(req, res) {
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
         method: "POST",
-        
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Request-ID": crypto.randomUUID(),
+          "IP-Address": req.headers["x-forwarded-for"] || "8.8.8.8",
+          "Redirect-URI": "https://jenyberg.com/dakujeme",
+          "Preferred-Method": "CARD_PAY"
+        },
         body: JSON.stringify({
           basePayment: {
             instructedAmount: {
