@@ -58,18 +58,24 @@ export default async function handler(req, res) {
             email: "agrumisk@gmail.com"
           },
           cardDetail: {
-    cardHolder: "Test User",
-    billingAddress: {
-      streetName: "Test Street",
-      buildingNumber: "1",
-      townName: "Bratislava",
-      postCode: "81101",
-      country: "SK"
-    }, 
-    cardPayLangOverride: "SK",
-    isPreAuthorization: false
-            
-  }
+            cardHolder: "Test User",
+            billingAddress: {
+              streetName: "Test Street",
+              buildingNumber: "1",
+              townName: "Bratislava",
+              postCode: "81101",
+              country: "SK"
+            },
+            cardPayLangOverride: "SK",
+            isPreAuthorization: false
+          },
+
+          // ✅ ВОТ ЭТО ДОБАВЛЕНО
+          redirectUrls: {
+            success: "https://jenyberg.com/dakujeme",
+            cancel: "https://jenyberg.com/dakujeme",
+            fail: "https://jenyberg.com/dakujeme"
+          }
         })
       }
     );
