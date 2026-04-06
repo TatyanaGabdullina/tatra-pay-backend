@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Получаем токен
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -28,7 +27,6 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    // 2. Создаём платёж (МИНИМАЛЬНЫЙ ВАРИАНТ)
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -47,13 +45,31 @@ export default async function handler(req, res) {
             instructedAmount: {
               amountValue: 1,
               currency: "EUR"
+            },
+            endToEnd: {
+              variableSymbol: "123",
+              specificSymbol: "123",
+              constantSymbol: "0308"
             }
           },
-          redirectUrls: {
-            success: "https://jenyberg.com/dakujeme",
-            cancel: "https://jenyberg.com/dakujeme",
-            fail: "https://jenyberg.com/dakujeme"
-          }
+          userData: {
+            firstName: "Test",
+            lastName: "User",
+            email: "agrumisk@gmail.com"
+          },
+          cardDetail: {
+    cardHolder: "Test User",
+    billingAddress: {
+      streetName: "Test Street",
+      buildingNumber: "1",
+      townName: "Bratislava",
+      postCode: "81101",
+      country: "SK"
+    }, 
+    cardPayLangOverride: "SK",
+    isPreAuthorization: false
+            
+  }
         })
       }
     );
