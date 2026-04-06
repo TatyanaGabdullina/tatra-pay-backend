@@ -76,7 +76,11 @@ export default async function handler(req, res) {
 
     const data = await paymentResponse.json();
 
-    return res.status(200).send(JSON.stringify(data, null, 2));
+    return res.status(200).json({
+      status: "success",
+      payment_url: data.tatraPayPlusUrl || null,
+      debug: data
+    });
 
   } catch (error) {
     return res.status(500).json({
