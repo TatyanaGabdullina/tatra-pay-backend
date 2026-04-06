@@ -8,6 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // 1. Получаем токен
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
       {
@@ -17,8 +18,8 @@ export default async function handler(req, res) {
         },
         body: new URLSearchParams({
           grant_type: "client_credentials",
-          client_id: "l7233dc796764741eea9371f48353e0e0e",
-          client_secret: "ec2379668d9d4a00ba5000e007852634",
+          client_id: "ТВОЙ_CLIENT_ID",
+          client_secret: "ТВОЙ_CLIENT_SECRET",
           scope: "TATRAPAYPLUS"
         })
       }
@@ -27,6 +28,7 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
+    // 2. Создаём платёж
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
       {
@@ -37,8 +39,7 @@ export default async function handler(req, res) {
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
           "IP-Address": req.headers["x-forwarded-for"] || "8.8.8.8",
-          "Redirect-URI": "https://jenyberg.com/dakujeme",
-          "Preferred-Method": "CARD_PAY"
+          "Redirect-URI": "https://jenyberg.com/dakujeme"
         },
         body: JSON.stringify({
           basePayment: {
@@ -55,21 +56,18 @@ export default async function handler(req, res) {
           userData: {
             firstName: "Test",
             lastName: "User",
-            email: "agrumisk@gmail.com"
+            email: "test@test.com"
           },
           cardDetail: {
-    cardHolder: "Test User",
-    billingAddress: {
-      streetName: "Test Street",
-      buildingNumber: "1",
-      townName: "Bratislava",
-      postCode: "81101",
-      country: "SK"
-    }, 
-    cardPayLangOverride: "SK",
-    isPreAuthorization: false
-            
-  }
+            cardHolder: "Test User",
+            billingAddress: {
+              streetName: "Test Street",
+              buildingNumber: "1",
+              townName: "Bratislava",
+              postCode: "81101",
+              country: "SK"
+            }
+          }
         })
       }
     );
@@ -77,7 +75,6 @@ export default async function handler(req, res) {
     const data = await paymentResponse.json();
 
     return res.status(200).json({
-      status: "success",
       payment_url: data.tatraPayPlusUrl || null,
       debug: data
     });
