@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
   try {
     const tokenResponse = await fetch(
-      "https://api.tatrabanka.sk/tatrapayplus/sandbox/auth/oauth/v2/token",
+      "https://api.tatrabanka.sk/tatrapayplus/auth/oauth/v2/token",
       {
         method: "POST",
         headers: {
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const accessToken = tokenData.access_token;
 
     const paymentResponse = await fetch(
-      "https://api.tatrabanka.sk/tatrapayplus/sandbox/v1/payments",
+      "https://api.tatrabanka.sk/tatrapayplus/v1/payments",
       {
         method: "POST",
         headers: {
@@ -57,19 +57,7 @@ export default async function handler(req, res) {
             lastName: "User",
             email: "agrumisk@gmail.com"
           },
-          cardDetail: {
-    cardHolder: "Test User",
-    billingAddress: {
-      streetName: "Test Street",
-      buildingNumber: "1",
-      townName: "Bratislava",
-      postCode: "81101",
-      country: "SK"
-    }, 
-    cardPayLangOverride: "SK",
-    isPreAuthorization: false
-            
-  }
+          
         })
       }
     );
