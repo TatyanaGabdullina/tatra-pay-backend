@@ -36,7 +36,7 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
           Accept: "application/json",
           "X-Request-ID": crypto.randomUUID(),
-          "IP-Address": req.headers["x-forwarded-for"] || "8.8.8.8",
+          "IP-Address": "1.1.1.1",
           "Redirect-URI": "https://jenyberg.com/dakujeme",
           "Preferred-Method": "CARD_PAY"
         },
