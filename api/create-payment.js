@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // TOKEN
+    // 1. Получаем токен
     const tokenResponse = await axios.post(
       "https://api.tatrabanka.sk/tatrapayplus/auth/oauth/v2/token",
       "grant_type=client_credentials&client_id=l7233dc796764741eea9371f48353e0e0e&client_secret=ec2379668d9d4a00ba5000e007852634&scope=TATRAPAYPLUS",
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // PAYMENT
+    // 2. Создаём платёж (КАК В POSTMAN)
     const paymentResponse = await axios.post(
       "https://api.tatrabanka.sk/tatrapayplus/v1/payments",
       {
@@ -41,24 +41,34 @@ export default async function handler(req, res) {
         userData: {
           firstName: "Test",
           lastName: "User",
-          email: "agrumisk@gmail.com"
+          email: "test@test.com"
+        },
+        cardDetail: {
+          cardHolder: "Test User",
+          billingAddress: {
+            streetName: "Test Street",
+            buildingNumber: "1",
+            townName: "Bratislava",
+            postCode: "81101",
+            country: "SK"
+          }
         }
       },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          Accept: "application/json",
           "Content-Type": "application/json",
-          "X-Request-ID": crypto.randomUUID(),
-          "IP-Address": "1.1.1.1",
-          "Redirect-URI": "https://jenyberg.com/dakujeme",
-          "Preferred-Method": "CARD_PAY"
+          Accept: "application/json",
+          "X-Request-ID": "test123",
+          "IP-Address": "8.8.8.8",
+          "Redirect-URI": "https://jenyberg.com/dakujeme"
         }
       }
     );
 
     return res.status(200).json({
-      payment_url: paymentResponse.data.tatraPayPlusUrl,
+      status: "success",
+      payment_url: paymentResponse.data.tatraPayPlusUrl || null,
       debug: paymentResponse.data
     });
 
