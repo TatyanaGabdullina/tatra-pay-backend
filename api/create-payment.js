@@ -4,7 +4,6 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Method not allowed" });
     }
 
-    // ===== 1. ПОЛУЧАЕМ ТОКЕН =====
     const tokenResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/auth/oauth/v2/token",
       {
@@ -22,24 +21,16 @@ export default async function handler(req, res) {
     );
 
     const tokenData = await tokenResponse.json();
-
-    if (!tokenData.access_token) {
-      return res.status(500).json({ error: "Token error", debug: tokenData });
-    }
-
     const accessToken = tokenData.access_token;
 
-    // ===== 2. IP ПОЛЬЗОВАТЕЛЯ =====
     const ip =
       req.headers["x-forwarded-for"]?.split(",")[0] ||
       req.socket?.remoteAddress ||
       "213.151.208.20";
 
-    // ===== 3. УНИКАЛЬНЫЙ ID =====
     const requestId =
       Date.now().toString() + Math.random().toString(36).substring(2);
 
-    // ===== 4. СОЗДАЁМ ПЛАТЁЖ =====
     const paymentResponse = await fetch(
       "https://api.tatrabanka.sk/tatrapayplus/v1/payments",
       {
